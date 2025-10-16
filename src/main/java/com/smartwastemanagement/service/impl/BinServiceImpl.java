@@ -1,9 +1,8 @@
 package com.smartwastemanagement.service.impl;
 
 import com.smartwastemanagement.dto.ApiResponse;
-import com.smartwastemanagement.entity.SensorReading;
-import com.smartwastemanagement.repository.SensorRecordRepo;
 import com.smartwastemanagement.service.BinService;
+import com.smartwastemanagement.util.SensorDataUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class BinServiceImpl implements BinService {
 
-    private final SensorRecordRepo sensorrepo;
+    private final SensorDataUtil sensorDataUtil;  // Inject the utility class
 
     @Override
     public ResponseEntity<ApiResponse> addBin() {
@@ -26,17 +25,11 @@ public class BinServiceImpl implements BinService {
     }
 
     @Override
-    public ResponseEntity<ApiResponse> readBinData(String binId){
+    public ResponseEntity<ApiResponse> readBinData(String binId) {
 
-        SensorReading sensorReading = sensorrepo.getSensorReadingByBinId(binId);
+        Object sensorReading = sensorDataUtil.readSensorData(binId);
 
-        if(sensorReading == null){
-            ApiResponse apiResponse = new ApiResponse("00","no such bin exist",null);
-            return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
-        }
-
-        ApiResponse apiResponse = new ApiResponse("02","Garbage Bin Sensor Reading",sensorReading);
+        ApiResponse apiResponse = new ApiResponse("02", "Garbage Bin Sensor Reading", sensorReading);
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
-
 }

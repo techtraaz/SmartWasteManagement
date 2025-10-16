@@ -4,6 +4,7 @@ package com.smartwastemanagement.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+@MappedSuperclass
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
