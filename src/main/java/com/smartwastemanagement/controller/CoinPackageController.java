@@ -2,8 +2,6 @@ package com.smartwastemanagement.controller;
 
 import com.smartwastemanagement.dto.ApiResponse;
 import com.smartwastemanagement.dto.BuyPackageDto;
-import com.smartwastemanagement.dto.RefundRequestDto;
-import com.smartwastemanagement.entity.CoinPackage;
 import com.smartwastemanagement.service.CoinPackageService;
 import com.smartwastemanagement.service.RefundService;
 import lombok.RequiredArgsConstructor;

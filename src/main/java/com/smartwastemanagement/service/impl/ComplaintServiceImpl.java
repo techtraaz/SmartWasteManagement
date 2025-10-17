@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -46,8 +46,8 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     @Override
     public ResponseEntity<ApiResponse> getUserComplaints(Integer userId) {
-        List<ComplaintDto> complaints = complaintRepository.findByUserId(userId)
-                .stream().map(this::mapToDTO).collect(Collectors.toList());
+        List<Complaint> complaints = complaintRepository.findByUserId(userId);
+
 
         ApiResponse response = new ApiResponse("00", "User complaints retrieved successfully", complaints);
         return ResponseEntity.ok(response);
@@ -55,8 +55,8 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     @Override
     public ResponseEntity<ApiResponse> getAllComplaints() {
-        List<ComplaintDto> complaints = complaintRepository.findAll()
-                .stream().map(this::mapToDTO).collect(Collectors.toList());
+        List<Complaint> complaints = complaintRepository.findAll();
+
 
         ApiResponse response = new ApiResponse("00", "All complaints retrieved successfully", complaints);
         return ResponseEntity.ok(response);

@@ -2,14 +2,12 @@ package com.smartwastemanagement.controller;
 
 import com.smartwastemanagement.dto.ApiResponse;
 import com.smartwastemanagement.dto.WasteCollectionDto;
-import com.smartwastemanagement.entity.Bin;
 import com.smartwastemanagement.service.BinService;
 import com.smartwastemanagement.service.WasteCollectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/waste")

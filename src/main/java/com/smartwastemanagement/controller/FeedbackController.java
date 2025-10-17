@@ -3,7 +3,6 @@ package com.smartwastemanagement.controller;
 
 import com.smartwastemanagement.dto.ApiResponse;
 import com.smartwastemanagement.dto.FeedbackDto;
-import com.smartwastemanagement.entity.Feedback;
 import com.smartwastemanagement.service.FeedbackService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

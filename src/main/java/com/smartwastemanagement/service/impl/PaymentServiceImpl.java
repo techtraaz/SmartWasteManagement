@@ -1,12 +1,8 @@
 package com.smartwastemanagement.service.impl;
 
 import com.smartwastemanagement.dto.ApiResponse;
-import com.smartwastemanagement.entity.Account;
 import com.smartwastemanagement.entity.Payment;
-import com.smartwastemanagement.entity.Refund;
-import com.smartwastemanagement.repository.AccountRepo;
 import com.smartwastemanagement.repository.PaymentRepo;
-import com.smartwastemanagement.repository.RefundRepo;
 import com.smartwastemanagement.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
