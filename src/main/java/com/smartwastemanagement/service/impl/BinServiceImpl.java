@@ -12,17 +12,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class BinServiceImpl implements BinService {
 
-    private final SensorDataUtil sensorDataUtil;  // Inject the utility class
+    private final SensorDataUtil sensorDataUtil;
 
-    @Override
-    public ResponseEntity<ApiResponse> addBin() {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<ApiResponse> getBinsByPropertyId(Integer propertyId) {
-        return null;
-    }
 
     @Override
     public ResponseEntity<ApiResponse> readBinData(String binId) {

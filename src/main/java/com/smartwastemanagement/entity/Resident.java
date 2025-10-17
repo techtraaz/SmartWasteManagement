@@ -2,12 +2,14 @@ package com.smartwastemanagement.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "resident")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@SuperBuilder
 public class Resident extends Property {
 
     @Id
@@ -17,4 +19,6 @@ public class Resident extends Property {
 
     @Column(name = "household_type", nullable = false, length = 100)
     private String householdType;
+
+
 }

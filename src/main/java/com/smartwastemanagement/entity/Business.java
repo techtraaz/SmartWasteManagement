@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table(name = "business")
 @Data
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Business extends Property {

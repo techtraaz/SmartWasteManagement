@@ -15,7 +15,7 @@ public class ComplaintController {
     private final ComplaintService complaintService;
 
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<ApiResponse> createComplaint(@RequestBody ComplaintDto dto) {
         return complaintService.createComplaint(dto);
     }
