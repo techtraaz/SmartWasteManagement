@@ -1,10 +1,8 @@
 package com.smartwastemanagement.controller;
 
-
 import com.smartwastemanagement.dto.ApiResponse;
-import com.smartwastemanagement.dto.FeedbackDto;
-import com.smartwastemanagement.entity.Feedback;
-import com.smartwastemanagement.service.FeedbackService;
+import com.smartwastemanagement.dto.RefundRequestDto;
+import com.smartwastemanagement.service.RefundService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,15 +11,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/feedback")
+@RequestMapping("/refund")
 @RequiredArgsConstructor
-public class FeedbackController {
+public class RefundController {
 
-    private final FeedbackService feedbackService;
+    private final RefundService refundService;
 
-    @PostMapping("/publish")
-    public ResponseEntity<ApiResponse> publishFeedback(@RequestBody FeedbackDto feedbackDto){
-        return feedbackService.publishFeedback(feedbackDto);
+    @PostMapping("/process")
+    public ResponseEntity<ApiResponse> refundPayment(@RequestBody RefundRequestDto refundReq) {
+        return refundService.processRefund(refundReq.getPaymentId(), refundReq.getReason());
     }
+
+
 
 }
