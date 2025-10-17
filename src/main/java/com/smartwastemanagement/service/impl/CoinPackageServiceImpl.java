@@ -5,83 +5,59 @@ import com.smartwastemanagement.entity.Account;
 import com.smartwastemanagement.entity.CoinPackage;
 import com.smartwastemanagement.entity.Payment;
 import com.smartwastemanagement.entity.UserCoins;
-import com.smartwastemanagement.repository.AccountRepo;
 import com.smartwastemanagement.repository.CoinPackageRepo;
-import com.smartwastemanagement.repository.PaymentRepo;
-import com.smartwastemanagement.repository.UserCoinRepo;
+import com.smartwastemanagement.service.AccountService;
 import com.smartwastemanagement.service.CoinPackageService;
+import com.smartwastemanagement.service.PaymentService;
+import com.smartwastemanagement.service.UserCoinsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CoinPackageServiceImpl implements CoinPackageService {
 
-    private final CoinPackageRepo packagerepo;
-    private final AccountRepo accountrepo;
-    private final UserCoinRepo  usercoinrepo;
-    private final PaymentRepo paymentrepo;
+    private final CoinPackageRepo coinPackageRepo;
+    private final AccountService accountService;
+    private final UserCoinsService userCoinsService;
+    private final PaymentService paymentService;
 
     @Override
-    public ResponseEntity<ApiResponse>  getAllPackages() {
-
-        List<CoinPackage> coinPackages = packagerepo.findAll();
-
-        if(coinPackages.isEmpty()){
-            ApiResponse response = new ApiResponse("00","no packages found",null);
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+    public ResponseEntity<ApiResponse> getAllPackages() {
+        List<CoinPackage> packages = coinPackageRepo.findAll();
+        if (packages.isEmpty()) {
+            return ResponseEntity.ok(new ApiResponse("00", "No packages found", null));
         }
-
-        ApiResponse response = new ApiResponse("02","available packages",coinPackages);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.ok(new ApiResponse("02", "Available packages", packages));
     }
 
     @Override
-    public ResponseEntity<ApiResponse> buyCoinPackage(Integer userId , Integer packageId) {
+    public ResponseEntity<ApiResponse> buyCoinPackage(Integer userId, Integer packageId) {
 
-        Account bankacc = accountrepo.findByAccountId(userId);
-        CoinPackage pc = packagerepo.findCoinPackageById(packageId);
-
-        ApiResponse response;
-
-        if (bankacc.getBalance() < pc.getPrice()) {
-            response = new ApiResponse("00", "insufficient balance", null);
-        } else {
-
-            CoinPackage coinPackage = packagerepo.findCoinPackageById(packageId);
-            UserCoins userCoins = usercoinrepo.findUserCoinsByUserId(userId);
-            Integer cointCount = userCoins.getCoins() + coinPackage.getCoins();
-            userCoins.setCoins(cointCount);
-            bankacc.setBalance(bankacc.getBalance() - pc.getPrice());
-            accountrepo.save(bankacc);
-            usercoinrepo.save(userCoins);
-            Payment packagePayment = makePayment(userId, pc.getPrice(), "card");
-            response = new ApiResponse("02", "package bought sucessfully", packagePayment);
+        CoinPackage coinPackage = coinPackageRepo.findCoinPackageById(packageId);
+        if (coinPackage == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse("01", "Coin package not found", null));
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        Account account = accountService.getAccountByUserId(userId);
+        if (account.getBalance() < coinPackage.getPrice()) {
+            return ResponseEntity.ok(new ApiResponse("00", "Insufficient balance", null));
+        }
+
+
+        accountService.deductBalance(account, coinPackage.getPrice());
+
+        UserCoins userCoins = userCoinsService.getUserCoins(userId);
+        userCoinsService.addCoins(userCoins, coinPackage.getCoins());
+
+
+        Payment payment = paymentService.createPayment(userId, coinPackage.getPrice(), "CARD");
+
+        return ResponseEntity.ok(new ApiResponse("02", "Package bought successfully", payment));
     }
-
-
-    public Payment makePayment(Integer userId, Double amount , String paymentMethod) {
-        LocalDateTime dateNow = LocalDateTime.now();
-        Payment payment = new Payment();
-        payment.setUserId(userId);
-        payment.setAmount(amount);
-        payment.setPaymentMethod(paymentMethod);
-        payment.setPaymentDate(dateNow);
-        paymentrepo.save(payment);
-        return payment;
-    }
-
-
-
-
-
-
 }
